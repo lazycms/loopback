@@ -628,7 +628,7 @@ describe('app', function() {
       var Foo = app.models.foo;
       var f = new Foo();
 
-      assert(f instanceof loopback.Model);
+      assert(f instanceof app.registry.getModel('Model'));
     });
 
     it('interprets extra first-level keys as options', function() {
@@ -674,13 +674,7 @@ describe('app', function() {
   describe('app.model(ModelCtor, config)', function() {
     it('attaches the model to a datasource', function() {
       app.dataSource('db', { connector: 'memory' });
-      var TestModel = loopback.Model.extend('TestModel');
-      // TestModel was most likely already defined in a different test,
-      // thus TestModel.dataSource may be already set
-      delete TestModel.dataSource;
-
-      app.model(TestModel, { dataSource: 'db' });
-
+      app.model('TestModel', { dataSource: 'db' });
       expect(app.models.TestModel.dataSource).to.equal(app.dataSources.db);
     });
   });
@@ -708,6 +702,7 @@ describe('app', function() {
     it('looks up the connector in `app.connectors`', function() {
       app.connector('custom', loopback.Memory);
       app.dataSource('custom', { connector: 'custom' });
+      console.log(app.dataSources.custom.name);
       expect(app.dataSources.custom.name).to.equal(loopback.Memory.name);
     });
   });

@@ -68,10 +68,16 @@ function escapeRegExp(str) {
 
 function token(options) {
   options = options || {};
+
+  var registry = options.registry;
+  if(!registry && options.app && options.app.registry) {
+    registry = options.app.registry;
+  }
+  
   var TokenModel = options.model || loopback.AccessToken;
   if (typeof TokenModel === 'string') {
     // Make it possible to configure the model in middleware.json
-    TokenModel = loopback.getModel(TokenModel);
+    TokenModel = registry.getModel(TokenModel);
   }
   var currentUserLiteral = options.currentUserLiteral;
   if (currentUserLiteral && (typeof currentUserLiteral !== 'string')) {
