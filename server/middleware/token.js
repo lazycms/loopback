@@ -69,16 +69,6 @@ function escapeRegExp(str) {
 function token(options) {
   options = options || {};
 
-  var registry = options.registry;
-  if(!registry && options.app && options.app.registry) {
-    registry = options.app.registry;
-  }
-  
-  var TokenModel = options.model || loopback.AccessToken;
-  if (typeof TokenModel === 'string') {
-    // Make it possible to configure the model in middleware.json
-    TokenModel = registry.getModel(TokenModel);
-  }
   var currentUserLiteral = options.currentUserLiteral;
   if (currentUserLiteral && (typeof currentUserLiteral !== 'string')) {
     debug('Set currentUserLiteral to \'me\' as the value is not a string.');
@@ -87,10 +77,33 @@ function token(options) {
   if (typeof currentUserLiteral === 'string') {
     currentUserLiteral = escapeRegExp(currentUserLiteral);
   }
-  assert(typeof TokenModel === 'function',
-    'loopback.token() middleware requires a AccessToken model');
 
   return function(req, res, next) {
+    var app = req.app;
+    var registry = app.registry;
+    var BaseAcessToken = registry.getModel('AccessToken');
+    var TokenModel;
+
+    switch(typeof options.model) {
+      case 'string':
+        TokenModel = registry.getModel(options.model);
+      break;
+      case 'function':
+        TokenModel = options.model;
+      break;
+    }
+
+    TokenModel = TokenModel || registry.getModelByType(BaseAcessToken) || BaseAcessToken;
+
+    assert(typeof TokenModel === 'function',
+      'loopback.token() middleware requires a AccessToken model');
+
+    var TokenModel = options.model || loopback.AccessToken;
+    if (typeof TokenModel === 'string') {
+      // Make it possible to configure the model in middleware.json
+      TokenModel = registry.getModel(TokenModel);
+    }
+
     if (req.accessToken !== undefined) {
       rewriteUserLiteral(req, currentUserLiteral);
       return next();

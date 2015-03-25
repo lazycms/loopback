@@ -12,6 +12,9 @@ TaskEmitter = require('strong-task-emitter');
 request = require('supertest');
 var RemoteObjects = require('strong-remoting');
 
+// Use local registries
+loopback.localRegistry = true;
+
 // Speed up the password hashing algorithm
 // for tests using the built-in User model
 loopback.User.settings.saltWorkFactor = 4;

@@ -702,7 +702,6 @@ describe('app', function() {
     it('looks up the connector in `app.connectors`', function() {
       app.connector('custom', loopback.Memory);
       app.dataSource('custom', { connector: 'custom' });
-      console.log(app.dataSources.custom.name);
       expect(app.dataSources.custom.name).to.equal(loopback.Memory.name);
     });
   });

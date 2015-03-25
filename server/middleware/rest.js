@@ -28,7 +28,7 @@ function rest() {
 
   return function restApiHandler(req, res, next) {
     var app = req.app;
-    var registry = app.registry || loopback.registry;
+    var registry = app.registry;
 
     // added for https://github.com/strongloop/loopback/issues/1134
     if (app.get('legacyExplorer') !== false) {
@@ -56,7 +56,7 @@ function rest() {
       }
 
       if (app.isAuthEnabled) {
-        var AccessToken = registry.getModelByType(loopback.AccessToken);
+        var AccessToken = registry.getModelByType(registry.getModel('AccessToken'));
         handlers.push(loopback.token({ model: AccessToken, app: app }));
       }
 

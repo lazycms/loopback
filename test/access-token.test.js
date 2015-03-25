@@ -4,6 +4,14 @@ var Token = loopback.AccessToken.extend('MyToken');
 var ACL = loopback.ACL;
 
 describe('loopback.token(options)', function() {
+  before(function() {
+    loopback.localRegistry = false;
+  });
+
+  after(function() {
+    loopback.localRegistry = true;
+  });
+
   beforeEach(createTestingToken);
 
   it('should populate req.token from the query string', function(done) {
@@ -176,6 +184,14 @@ describe('loopback.token(options)', function() {
 });
 
 describe('AccessToken', function() {
+  before(function() {
+    loopback.localRegistry = false;
+  });
+
+  after(function() {
+    loopback.localRegistry = true;
+  });
+
   beforeEach(createTestingToken);
 
   it('should auto-generate id', function() {
@@ -229,6 +245,14 @@ describe('AccessToken', function() {
 });
 
 describe('app.enableAuth()', function() {
+  before(function() {
+    loopback.localRegistry = false;
+  });
+
+  after(function() {
+    loopback.localRegistry = true;
+  });
+
   beforeEach(createTestingToken);
 
   it('prevents remote call with 401 status on denied ACL', function(done) {
@@ -352,7 +376,7 @@ function createTestApp(testToken, settings, done) {
   var app = loopback();
 
   app.use(loopback.cookieParser('secret'));
-  app.use(loopback.token({model: 'MyToken', currentUserLiteral: 'me'}));
+  app.use(loopback.token({model: Token, currentUserLiteral: 'me'}));
   app.get('/token', function(req, res) {
     res.cookie('authorization', testToken.id, {signed: true});
     res.end();

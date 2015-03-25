@@ -1,4 +1,12 @@
 describe('loopback.rest', function() {
+  before(function() {
+    loopback.localRegistry = false;
+  });
+
+  after(function() {
+    loopback.localRegistry = true;
+  });
+
   var MyModel;
   beforeEach(function() {
     var ds = app.dataSource('db', { connector: loopback.Memory });
