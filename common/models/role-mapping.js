@@ -24,7 +24,7 @@ module.exports = function(RoleMapping) {
    * @param {Application} application
    */
   RoleMapping.prototype.application = function(callback) {
-    var registry = this.constructor.registry || loopback.registry;
+    var registry = this.constructor.registry;
 
     if (this.principalType === RoleMapping.APPLICATION) {
       var applicationModel = this.constructor.Application ||
@@ -64,7 +64,7 @@ module.exports = function(RoleMapping) {
    */
   RoleMapping.prototype.childRole = function(callback) {
     var registry = this.constructor.registry;
-    
+
     if (this.principalType === RoleMapping.ROLE) {
       var roleModel = this.constructor.Role ||
         registry.getModelByType(loopback.Role);
